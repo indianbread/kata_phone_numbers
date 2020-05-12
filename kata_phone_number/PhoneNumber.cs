@@ -21,11 +21,14 @@ namespace kata_phone_number
         {
             string[] fileData = File.ReadAllLines(fileName);
             //remove name and number heading from array
-            fileData = fileData.Skip(1).ToArray();
+            if (fileData[0].Contains("Name"))
+            {
+                fileData = fileData.Skip(1).ToArray();
+            }
+
             var contactDetails = fileData.Select(line => line.Split(","));
             var phoneNumbers = contactDetails.Select(detail => 
-                new PhoneNumber(detail[0], RemoveDelimitersFromNumber(detail[1])))
-                .ToImmutableArray();
+                new PhoneNumber(detail[0], RemoveDelimitersFromNumber(detail[1])));
             return phoneNumbers;
         }
 
