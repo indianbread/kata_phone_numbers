@@ -15,14 +15,16 @@ namespace kata_phone_number.tests
 
             var sut = PhoneNumber.GetPhoneNumbers(fileName);
             var expectedFirstEntry = new PhoneNumber("Kimberlee Turlington", "025164684873") ;
-            
+            var expectedLastEntry = new PhoneNumber("Yoshiko Dekany", "031492144");
             Assert.Equal(5, sut.Count());
             Assert.Equal(expectedFirstEntry.Name, sut.First().Name);
             Assert.Equal(expectedFirstEntry.Number, sut.First().Number);
+            Assert.Equal(expectedLastEntry.Name, sut.Last().Name);
+            Assert.Equal(expectedLastEntry.Number, sut.Last().Number);
 
         }
         
         //functional programming - is it still acceptable to parse text data to objects
-        // how can i parse each line to a phone number object without using a loop
+        
     }
 }
