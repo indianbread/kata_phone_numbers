@@ -9,30 +9,25 @@ namespace kata_phone_number
     {
         public bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
         {
-            var initialNumberOfMatches = 0;
-            return GetMatchingPrefixCount(phoneNumbers, initialNumberOfMatches) == 0;
+            return GetMatchingPrefixCount(phoneNumbers) == 0;
 
         }
 
-        private int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList,
-            int initialMatches)
+        private int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList)
         {
+            int numberOfMatches = 0;
             var orderedPhoneNumbers = phoneNumbersList.OrderBy(number => number.Number.Length).ToList();
-            if ( !orderedPhoneNumbers.Any())
-            {
-                return initialMatches;
-            }
+            
+            if ( !orderedPhoneNumbers.Any()) return numberOfMatches;
+            
             var firstNumber = orderedPhoneNumbers.First().Number;
             orderedPhoneNumbers.RemoveAt(0);
-            var matchingNumbers = orderedPhoneNumbers.Where(number => 
-                number.Number.Substring(0, firstNumber.Length).Contains(firstNumber)).ToList();
-            int numberOfMatches = initialMatches;
-            if (matchingNumbers.Any())
-            {
-                numberOfMatches += matchingNumbers.Count;
-                return numberOfMatches;
-            }
-            return GetMatchingPrefixCount(orderedPhoneNumbers, numberOfMatches);
+            var matchingNumbers = orderedPhoneNumbers.Where(phoneNumber => 
+                phoneNumber.Number.Substring(0, firstNumber.Length).Contains(firstNumber)).ToList();
+            
+            if (matchingNumbers.Any()) return matchingNumbers.Count;
+            
+            return GetMatchingPrefixCount(orderedPhoneNumbers);
         }
         
         public string FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
