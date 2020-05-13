@@ -7,13 +7,13 @@ namespace kata_phone_number
 {
     public class PhoneNumberCheck
     {
-        public bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
+        public static bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
         {
             return GetMatchingPrefixCount(phoneNumbers) == 0;
 
         }
 
-        private int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList)
+        private static int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList)
         {
             int numberOfMatches = 0;
             var orderedPhoneNumbers = phoneNumbersList.OrderBy(number => number.Number.Length).ToList();
@@ -30,13 +30,12 @@ namespace kata_phone_number
             return GetMatchingPrefixCount(orderedPhoneNumbers);
         }
         
-        public IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
+        public static IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
         {
-            var names = name.Split(" ");
-            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name == name).ToList();
+            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
             if (!result.Any()) throw new ArgumentException("No results found");
             return result.Select(number => number.ToString());
         }
-
+        
     }
 }

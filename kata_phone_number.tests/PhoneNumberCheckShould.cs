@@ -24,10 +24,8 @@ namespace kata_phone_number.tests
                 @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_5.txt";
             var testPhoneList2 = PhoneNumber.GetPhoneNumbers(fileName);
             
-            var sut = new PhoneNumberCheck();
-            
-            Assert.False(sut.IsListConsistent(testPhoneList)); 
-            Assert.True(sut.IsListConsistent(testPhoneList2));
+            Assert.False(PhoneNumberCheck.IsListConsistent(testPhoneList)); 
+            Assert.True(PhoneNumberCheck.IsListConsistent(testPhoneList2));
         }
 
         [Fact]
@@ -39,7 +37,7 @@ namespace kata_phone_number.tests
             var sut = new PhoneNumberCheck();
             var expectedResult = new List<string> {"Name: Devon Osei, Number: 010932357"};
             
-            Assert.Equal(expectedResult, sut.FindByName("Devon Osei", testPhoneList));
+            Assert.Equal(expectedResult, PhoneNumberCheck.FindByName("Devon Osei", testPhoneList));
             
         }
 
@@ -51,7 +49,7 @@ namespace kata_phone_number.tests
             var testPhoneList = PhoneNumber.GetPhoneNumbers(fileName);
             var sut = new PhoneNumberCheck();
             
-            Assert.Throws<ArgumentException>(() => sut.FindByName("asddfg", testPhoneList));
+            Assert.Throws<ArgumentException>(() => PhoneNumberCheck.FindByName("asddfg", testPhoneList));
 
 
         }
