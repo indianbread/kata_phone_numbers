@@ -23,8 +23,7 @@ namespace kata_phone_number.tests
             Assert.Equal(expectedLastEntry.Number, sut.Last().Number);
 
         }
-        
-        //functional programming - is it still acceptable to parse text data to objects
+
         
     }
 }

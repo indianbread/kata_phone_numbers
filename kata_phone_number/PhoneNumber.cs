@@ -32,6 +32,11 @@ namespace kata_phone_number
             return phoneNumbers;
         }
 
+        public override string ToString()
+        {
+            return $"Name: {Name}, Number: {Number}";
+        }
+
         private static string RemoveDelimitersFromNumber(string rawPhoneNumber)
         {
             var delimiters = new string[] {"-", " "};
@@ -39,6 +44,7 @@ namespace kata_phone_number
             var numbersOnly = String.Join("", separatedNumberPortions);
             return numbersOnly;
         }
+        
         
         
     }

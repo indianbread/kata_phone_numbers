@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using Xunit;
 using kata_phone_number;
 
@@ -36,9 +37,23 @@ namespace kata_phone_number.tests
                 @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_5.txt";
             var testPhoneList = PhoneNumber.GetPhoneNumbers(fileName);
             var sut = new PhoneNumberCheck();
+            var expectedResult = new List<string> {"Name: Devon Osei, Number: 010932357"};
             
-            Assert.Equal("010932357", sut.FindByName("Devon Osei", testPhoneList));
+            Assert.Equal(expectedResult, sut.FindByName("Devon Osei", testPhoneList));
             
+        }
+
+        [Fact]
+        public void DisplayErrorMessageIfNoResultsFoundWhenSearchingByName()
+        {
+            var fileName =
+                @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_5.txt";
+            var testPhoneList = PhoneNumber.GetPhoneNumbers(fileName);
+            var sut = new PhoneNumberCheck();
+            
+            Assert.Throws<ArgumentException>(() => sut.FindByName("asddfg", testPhoneList));
+
+
         }
     }
     

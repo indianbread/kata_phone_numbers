@@ -30,16 +30,13 @@ namespace kata_phone_number
             return GetMatchingPrefixCount(orderedPhoneNumbers);
         }
         
-        public string FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
+        public IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
         {
             var names = name.Split(" ");
-            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name == name);
-            if (!result.Any())
-            {
-                return "No results available";
-            }
-            return result.First().Number;
-            
+            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name == name).ToList();
+            if (!result.Any()) throw new ArgumentException("No results found");
+            return result.Select(number => number.ToString());
         }
+
     }
 }
