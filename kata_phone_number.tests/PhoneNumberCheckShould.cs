@@ -11,21 +11,33 @@ namespace kata_phone_number.tests
     public class PhoneNumberCheckShould
     {
         [Fact]
-        public void DetermineIfAPhoneNumberIsAPrefixOfAnother()
+        public void ReturnAListContainingInconsistentNumbers()
         {
+            var bob = new PhoneNumber("Bob", "91125426");
+            var alice = new PhoneNumber("Alice", "97625992");
+            var emergency = new PhoneNumber("Emergency", "911");
+            
             var testPhoneList = new List<PhoneNumber>
-            {
-                new PhoneNumber("Bob", "91125426" ),
-                new PhoneNumber("Alice", "97625992" ),
-                new PhoneNumber("Emergency", "911" )
+            { bob, alice, emergency};
+            
+            var expectedResultList = new List<PhoneNumber>() {emergency, bob};
 
-            };
+            var actual = PhoneNumberCheck.GetInconsistentNumbers(testPhoneList).ToList();
+            
+            Assert.Equal(2, actual.Count());
+            Assert.Equal(expectedResultList.First(), actual.First());
+            Assert.Equal(expectedResultList.Last(), actual.Last());
+        }
+
+        [Fact]
+        public void ReturnAnEmptyListIfNoConsistentNumbers()
+        {
             var fileName =
                 @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_5.txt";
             var testPhoneList2 = PhoneNumber.GetPhoneNumbers(fileName);
             
-            Assert.False(PhoneNumberCheck.IsListConsistent(testPhoneList)); 
-            Assert.True(PhoneNumberCheck.IsListConsistent(testPhoneList2));
+            Assert.Empty(PhoneNumberCheck.GetInconsistentNumbers(testPhoneList2));
+
         }
 
         [Fact]

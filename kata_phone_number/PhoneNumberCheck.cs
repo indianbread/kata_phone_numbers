@@ -7,29 +7,39 @@ namespace kata_phone_number
 {
     public class PhoneNumberCheck
     {
-        public static bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
+        public static IEnumerable<PhoneNumber> GetInconsistentNumbers(IEnumerable<PhoneNumber> phoneNumbers)
         {
-            return GetMatchingPrefixCount(phoneNumbers) == 0;
-
+            ICollection<PhoneNumber> inconsistentPhoneNumbers = new List<PhoneNumber>();
+            return GetMatchingPrefixCount(phoneNumbers, inconsistentPhoneNumbers) ;
         }
 
-        private static int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList)
+        private static IEnumerable<PhoneNumber> GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList, ICollection<PhoneNumber> inconsistentNumbers)
         {
-            int numberOfMatches = 0;
             var orderedPhoneNumbers = phoneNumbersList.OrderBy(number => number.Number.Length).ToList();
+
+            if (!orderedPhoneNumbers.Any()) return inconsistentNumbers;
             
-            if ( !orderedPhoneNumbers.Any()) return numberOfMatches;
-            
-            var firstNumber = orderedPhoneNumbers.First().Number;
+            var firstNumber = orderedPhoneNumbers.First();
             orderedPhoneNumbers.RemoveAt(0);
             var matchingNumbers = orderedPhoneNumbers.Where(phoneNumber => 
-                phoneNumber.Number.Substring(0, firstNumber.Length).Contains(firstNumber)).ToList();
-            
-            if (matchingNumbers.Any()) return matchingNumbers.Count;
-            
-            return GetMatchingPrefixCount(orderedPhoneNumbers);
+                phoneNumber.Number.Substring(0, firstNumber.Number.Length).Contains(firstNumber.Number)).ToList();
+            if (matchingNumbers.Any())
+            {
+                inconsistentNumbers.Add(firstNumber);
+                AddNumberToListOfInconsistentNumbers(inconsistentNumbers, matchingNumbers);
+
+            }
+            return GetMatchingPrefixCount(orderedPhoneNumbers, inconsistentNumbers);
         }
-        
+
+        private static ICollection<PhoneNumber> AddNumberToListOfInconsistentNumbers(ICollection<PhoneNumber> inconsistentNumbers, IEnumerable<PhoneNumber> matchingNumbers)
+        {
+            var allNumbers = matchingNumbers.ToList();
+            if (!allNumbers.Any()) return inconsistentNumbers;
+            inconsistentNumbers.Add(allNumbers.First());
+            allNumbers.RemoveAt(0);
+            return AddNumberToListOfInconsistentNumbers(inconsistentNumbers, allNumbers);
+        }
         public static IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
         {
             var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
