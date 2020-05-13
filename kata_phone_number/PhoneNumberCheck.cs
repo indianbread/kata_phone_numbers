@@ -27,11 +27,19 @@ namespace kata_phone_number
             {
                 inconsistentNumbers.Add(firstNumber);
                 AddNumberToListOfInconsistentNumbers(inconsistentNumbers, matchingNumbers);
+                RemoveNumberFromPhoneNumbersList(matchingNumbers, orderedPhoneNumbers);
 
             }
             return GetMatchingPrefixCount(orderedPhoneNumbers, inconsistentNumbers);
         }
-
+        
+        public static IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
+        {
+            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
+            if (!result.Any()) throw new ArgumentException("No results found");
+            return result.Select(number => number.ToString());
+        }
+        
         private static ICollection<PhoneNumber> AddNumberToListOfInconsistentNumbers(ICollection<PhoneNumber> inconsistentNumbers, IEnumerable<PhoneNumber> matchingNumbers)
         {
             var allNumbers = matchingNumbers.ToList();
@@ -40,11 +48,14 @@ namespace kata_phone_number
             allNumbers.RemoveAt(0);
             return AddNumberToListOfInconsistentNumbers(inconsistentNumbers, allNumbers);
         }
-        public static IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
+
+        private static void RemoveNumberFromPhoneNumbersList(IEnumerable<PhoneNumber> matchingNumbers, List<PhoneNumber> phoneNumbers)
         {
-            var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
-            if (!result.Any()) throw new ArgumentException("No results found");
-            return result.Select(number => number.ToString());
+            var allNumbers = matchingNumbers.ToList();
+            if (!allNumbers.Any()) return;
+            phoneNumbers.Remove(allNumbers.First());
+            allNumbers.RemoveAt(0);
+            RemoveNumberFromPhoneNumbersList(allNumbers, phoneNumbers);
         }
         
     }
