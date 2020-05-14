@@ -9,16 +9,14 @@ namespace kata_phone_number
     {
         public static IEnumerable<PhoneNumber> GetInconsistentNumbers(IEnumerable<PhoneNumber> phoneNumbers)
         {
+            var orderedPhoneNumbers = phoneNumbers.OrderBy(number => number.Number.Length).ToList();
             ICollection<PhoneNumber> inconsistentPhoneNumbers = new List<PhoneNumber>();
-            return GetMatchingPrefixCount(phoneNumbers, inconsistentPhoneNumbers) ;
+            return GetMatchingPhoneNumbers(orderedPhoneNumbers, inconsistentPhoneNumbers) ;
         }
 
-        private static IEnumerable<PhoneNumber> GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList, ICollection<PhoneNumber> inconsistentNumbers)
+        private static IEnumerable<PhoneNumber> GetMatchingPhoneNumbers(List<PhoneNumber> orderedPhoneNumbers, ICollection<PhoneNumber> inconsistentNumbers)
         {
-            var orderedPhoneNumbers = phoneNumbersList.OrderBy(number => number.Number.Length).ToList();
-
             if (!orderedPhoneNumbers.Any()) return inconsistentNumbers;
-            
             var firstNumber = orderedPhoneNumbers.First();
             orderedPhoneNumbers.RemoveAt(0);
             var matchingNumbers = orderedPhoneNumbers.Where(phoneNumber => 
@@ -28,9 +26,8 @@ namespace kata_phone_number
                 inconsistentNumbers.Add(firstNumber);
                 AddNumberToListOfInconsistentNumbers(inconsistentNumbers, matchingNumbers);
                 RemoveNumberFromPhoneNumbersList(matchingNumbers, orderedPhoneNumbers);
-
             }
-            return GetMatchingPrefixCount(orderedPhoneNumbers, inconsistentNumbers);
+            return GetMatchingPhoneNumbers(orderedPhoneNumbers, inconsistentNumbers);
         }
         
         public static List<PhoneNumber> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)

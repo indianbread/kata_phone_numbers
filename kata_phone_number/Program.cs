@@ -11,88 +11,64 @@ namespace kata_phone_number
     {
         static void Main(string[] args)
         {
-            var options = new Dictionary<int, Action>()
-            {
-                {1, CheckPhoneList},
-                {2, FindByName}
-            };
-
-            DisplayOptions(options, 1);
+            DisplayOptions(_options, 1);
             var input = GetSelection();
             try
             {
-                var validatedSelection = GetValidatedSelection(options, input);
-                options[validatedSelection].Invoke();
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                _options[input].Invoke();
+                watch.Stop();
+                var elapsedTime = watch.ElapsedMilliseconds;
+                Console.WriteLine("\nTime taken to search phone list: " + elapsedTime + " milliseconds");
+            }
+            catch (ArgumentException e) 
+            {
+                Console.WriteLine(e.Message);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                //keep exception as simple as possible - don't call other functions here
-                // input = GetSelection();
-                // GetValidatedSelection(options, input);
             }
-            
         }
-//to make program keep executing, wrap it in a function
-        private static string GetSelection()
+
+        private static int GetSelection()
         {
             Console.WriteLine("Select your options:");
             var input = Console.ReadLine();
-            return input;
-        }
-
-        private static int GetValidatedSelection(Dictionary<int, Action> options, string selection)
-        {
-            var isNumber = Int32.TryParse(selection, out int option);
-            if (!isNumber) throw new ArgumentException("Error: Not a valid selection ");
-            if(!options.ContainsKey(option)) throw new ArgumentException("Error: Not a valid option");
-            return option;
-        }
-
-
-
-        private static void DisplayOptions(Dictionary<int, Action> options, int optionsKey)
-        {
-            if (optionsKey > options.Count) return;
-            Console.WriteLine($"{optionsKey}. {options[optionsKey].GetMethodInfo().Name}");
-            optionsKey++;
-            DisplayOptions(options, optionsKey);
-        }
-
-        private static void CheckPhoneList()
-        {
-
-            var results = PhoneNumberCheck.GetInconsistentNumbers(_phoneNumberList).ToList();
-            Console.WriteLine($"Result for {_fileName}");
-            if (!results.Any())
+            var isInputValid = Int32.TryParse(input, out int selection);
+            if (!isInputValid)
             {
-                Console.WriteLine("This list is consistent");
-                return;
+                Console.WriteLine("Error: Not a valid number");
+                return GetSelection();
             }
 
-            Console.WriteLine("The following phone numbers are inconsistent:");
-            DisplayResults(results.ToList());
+            if (!_options.ContainsKey(selection))
+            {
+                Console.WriteLine("Error: Not a valid option");
+                return GetSelection();
+            }
+            
+            return selection;
         }
-
-        private static void FindByName()
+        
+        private static void DisplayOptions(Dictionary<int, Action> options, int optionsStartKey)
         {
-            Console.WriteLine("Enter a name to search:");
-            var nameToSearch = Console.ReadLine();
-            var results = PhoneNumberCheck.FindByName(nameToSearch, _phoneNumberList);
-            DisplayResults(results);
+            if (optionsStartKey > options.Count) return;
+            Console.WriteLine($"{optionsStartKey}. {options[optionsStartKey].GetMethodInfo().Name}");
+            optionsStartKey++;
+            DisplayOptions(options, optionsStartKey);
         }
 
-
-        private static string DisplayResults(List<PhoneNumber> results)
-        { 
-            if (!results.Any()) return null;
-            Console.WriteLine(results.First().ToString());
-            results.RemoveAt(0);
-            return DisplayResults(results);
-        }
-
-        private static readonly string _fileName = @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_10000.txt";
-
-        private static readonly IEnumerable<PhoneNumber> _phoneNumberList = PhoneNumber.GetPhoneNumbers(_fileName);
+        
+        private static Dictionary<int, Action> _options = new Dictionary<int, Action>()
+        {
+            {1, ProgramOption.CheckPhoneList},
+            {2, ProgramOption.FindByName}
+        };
     }
 }
+
+//TODO: Generate a test data of 10x more than previous one to log time difference in execution
+//TODO: print start & stop time to log execution time
+//TODO: Ask max how to create a library to store standard I/O handing & validation files to be reused
+
