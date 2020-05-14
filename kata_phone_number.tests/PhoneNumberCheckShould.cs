@@ -47,7 +47,7 @@ namespace kata_phone_number.tests
                 @$"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}/AppData/phone_data_5.txt";
             var testPhoneList = PhoneNumber.GetPhoneNumbers(fileName);
             var sut = new PhoneNumberCheck();
-            var expectedResult = new List<string> {"Name: Devon Osei, Number: 010932357"};
+            var expectedResult = new List<PhoneNumber> {new PhoneNumber("Devon Osei", "010932357")};
             
             Assert.Equal(expectedResult, PhoneNumberCheck.FindByName("Devon Osei", testPhoneList));
             

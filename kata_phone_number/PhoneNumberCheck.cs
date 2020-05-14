@@ -33,11 +33,11 @@ namespace kata_phone_number
             return GetMatchingPrefixCount(orderedPhoneNumbers, inconsistentNumbers);
         }
         
-        public static IEnumerable<string> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
+        public static List<PhoneNumber> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
         {
             var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
-            if (!result.Any()) throw new ArgumentException("No results found");
-            return result.Select(number => number.ToString());
+            if (!result.Any()) throw new ArgumentException("Error: No results found");
+            return result;
         }
         
         private static ICollection<PhoneNumber> AddNumberToListOfInconsistentNumbers(ICollection<PhoneNumber> inconsistentNumbers, IEnumerable<PhoneNumber> matchingNumbers)
