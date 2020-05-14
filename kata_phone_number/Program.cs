@@ -61,7 +61,7 @@ namespace kata_phone_number
         private static void CheckPhoneList()
         {
 
-            var results = PhoneNumberCheck.GetInconsistentNumbers(_phoneNumberList);
+            var results = PhoneNumberCheck.GetInconsistentNumbers(_phoneNumberList).ToList();
             Console.WriteLine($"Result for {_fileName}");
             if (!results.Any())
             {
