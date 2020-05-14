@@ -27,12 +27,13 @@ namespace kata_phone_number
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                input = GetSelection();
-                GetValidatedSelection(options, input);
+                //keep exception as simple as possible - don't call other functions here
+                // input = GetSelection();
+                // GetValidatedSelection(options, input);
             }
             
         }
-
+//to make program keep executing, wrap it in a function
         private static string GetSelection()
         {
             Console.WriteLine("Select your options:");
