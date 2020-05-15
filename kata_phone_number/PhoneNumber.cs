@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 
@@ -20,11 +21,20 @@ namespace kata_phone_number
         {
             string[] fileData = File.ReadAllLines(fileName);
             //remove name and number heading from array
-            fileData = fileData.Skip(1).ToArray();
+            if (fileData[0].Contains("Name"))
+            {
+                fileData = fileData.Skip(1).ToArray();
+            }
+
             var contactDetails = fileData.Select(line => line.Split(","));
             var phoneNumbers = contactDetails.Select(detail => 
                 new PhoneNumber(detail[0], RemoveDelimitersFromNumber(detail[1])));
             return phoneNumbers;
+        }
+
+        public override string ToString()
+        {
+            return $"Name: {Name}, Number: {Number}";
         }
 
         private static string RemoveDelimitersFromNumber(string rawPhoneNumber)
@@ -34,6 +44,7 @@ namespace kata_phone_number
             var numbersOnly = String.Join("", separatedNumberPortions);
             return numbersOnly;
         }
+        
         
         
     }
