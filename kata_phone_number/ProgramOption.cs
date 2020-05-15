@@ -7,7 +7,15 @@ namespace kata_phone_number
 {
     public class ProgramOption
     {
-        public static void CheckPhoneList()
+        public static void CheckListConsistency()
+        {
+            var result = PhoneNumberCheck.IsListConsistent(_phoneNumberList)
+                ? "Phone number list is consistent"
+                : "Phone number list is not consistent";
+            Console.WriteLine($"Result for {_fileName.Substring(120)}");
+            Console.WriteLine(result);
+        }
+        public static void GetInconsistentPhoneNumbers()
         {
 
             var results = PhoneNumberCheck.GetInconsistentNumbers(_phoneNumberList).ToList();

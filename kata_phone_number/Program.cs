@@ -12,11 +12,11 @@ namespace kata_phone_number
         static void Main(string[] args)
         {
             DisplayOptions(_options, 1);
-            var input = GetSelection();
+            var selection = GetValidSelection();
             try
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                _options[input].Invoke();
+                _options[selection].Invoke();
                 watch.Stop();
                 var elapsedTime = watch.ElapsedMilliseconds;
                 Console.WriteLine("\nTime taken to search phone list: " + elapsedTime + " milliseconds");
@@ -31,23 +31,16 @@ namespace kata_phone_number
             }
         }
 
-        private static int GetSelection()
+        private static int GetValidSelection()
         {
-            Console.WriteLine("Select your options:");
+            Console.WriteLine("Select your option:");
             var input = Console.ReadLine();
             var isInputValid = Int32.TryParse(input, out int selection);
-            if (!isInputValid)
+            if (!isInputValid || !_options.ContainsKey(selection))
             {
-                Console.WriteLine("Error: Not a valid number");
-                return GetSelection();
+                Console.WriteLine("Error: Not a valid selection");
+                return GetValidSelection();
             }
-
-            if (!_options.ContainsKey(selection))
-            {
-                Console.WriteLine("Error: Not a valid option");
-                return GetSelection();
-            }
-            
             return selection;
         }
         
@@ -62,8 +55,9 @@ namespace kata_phone_number
         
         private static Dictionary<int, Action> _options = new Dictionary<int, Action>()
         {
-            {1, ProgramOption.CheckPhoneList},
-            {2, ProgramOption.FindByName}
+            {1, ProgramOption.CheckListConsistency},
+            {2, ProgramOption.GetInconsistentPhoneNumbers},
+            {3, ProgramOption.FindByName}
         };
     }
 }

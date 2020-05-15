@@ -7,6 +7,31 @@ namespace kata_phone_number
 {
     public class PhoneNumberCheck
     {
+        
+        //opton 1
+        public static bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
+        {
+            return GetMatchingPrefixCount(phoneNumbers) == 0;
+        }
+
+        private static int GetMatchingPrefixCount(IEnumerable<PhoneNumber> phoneNumbersList)
+        {
+            int numberOfMatches = 0;
+            var orderedPhoneNumbers = phoneNumbersList.OrderBy(number => number.Number.Length).ToList();
+            
+            if ( !orderedPhoneNumbers.Any()) return numberOfMatches;
+            
+            var firstNumber = orderedPhoneNumbers.First().Number;
+            orderedPhoneNumbers.RemoveAt(0);
+            var matchingNumbers = orderedPhoneNumbers.Where(phoneNumber => 
+                phoneNumber.Number.Substring(0, firstNumber.Length).Contains(firstNumber)).ToList();
+            
+            if (matchingNumbers.Any()) return matchingNumbers.Count;
+            
+            return GetMatchingPrefixCount(orderedPhoneNumbers);
+        }
+        
+        //Option 2 - Displaying a list of inconsistent numbers
         public static IEnumerable<PhoneNumber> GetInconsistentNumbers(IEnumerable<PhoneNumber> phoneNumbers)
         {
             var orderedPhoneNumbers = phoneNumbers.OrderBy(number => number.Number.Length).ToList();
@@ -30,6 +55,8 @@ namespace kata_phone_number
             return GetMatchingPhoneNumbers(orderedPhoneNumbers, inconsistentNumbers);
         }
         
+        //option 3
+
         public static List<PhoneNumber> FindByName(string name, IEnumerable<PhoneNumber> phoneNumbers)
         {
             var result = phoneNumbers.Where(phoneNumber => phoneNumber.Name.Contains(name)).ToList();
