@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace kata_phone_number
 {
@@ -47,9 +45,16 @@ namespace kata_phone_number
         private static void DisplayOptions(Dictionary<int, Action> options, int optionsStartKey)
         {
             if (optionsStartKey > options.Count) return;
-            Console.WriteLine($"{optionsStartKey}. {options[optionsStartKey].GetMethodInfo().Name}");
+            var methodName = options[optionsStartKey].GetMethodInfo().Name;
+            Console.WriteLine($"{optionsStartKey}. {FormatMethodName(methodName)}");
             optionsStartKey++;
             DisplayOptions(options, optionsStartKey);
+        }
+
+        private static string FormatMethodName(string option)
+        {
+            var optionWords = Regex.Split(option, @"(?<!^)(?=[A-Z])");
+            return String.Join(" ", optionWords);
         }
 
         
@@ -59,10 +64,9 @@ namespace kata_phone_number
             {2, ProgramOption.GetInconsistentPhoneNumbers},
             {3, ProgramOption.FindByName}
         };
+        
     }
 }
 
-//TODO: Regex to display menu options
-//TODO: Generate a test data of 10x more than previous one to log time difference in execution
-//TODO: Ask max how to create a library to store standard I/O handing & validation files to be reused
+
 

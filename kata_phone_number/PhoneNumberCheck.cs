@@ -8,7 +8,7 @@ namespace kata_phone_number
     public class PhoneNumberCheck
     {
         
-        //opton 1
+        //option 1
         public static bool IsListConsistent(IEnumerable<PhoneNumber> phoneNumbers)
         {
             return GetMatchingPrefixCount(phoneNumbers) == 0;
@@ -34,6 +34,7 @@ namespace kata_phone_number
         //Option 2 - Displaying a list of inconsistent numbers
         public static IEnumerable<PhoneNumber> GetInconsistentNumbers(IEnumerable<PhoneNumber> phoneNumbers)
         {
+            //moved ordering of list here so recursive function below doesn't make a new ordered list each time
             var orderedPhoneNumbers = phoneNumbers.OrderBy(number => number.Number.Length).ToList();
             ICollection<PhoneNumber> inconsistentPhoneNumbers = new List<PhoneNumber>();
             return GetMatchingPhoneNumbers(orderedPhoneNumbers, inconsistentPhoneNumbers) ;
