@@ -62,7 +62,7 @@ namespace kata_phone_number
     }
 }
 
+//TODO: Regex to display menu options
 //TODO: Generate a test data of 10x more than previous one to log time difference in execution
-//TODO: print start & stop time to log execution time
 //TODO: Ask max how to create a library to store standard I/O handing & validation files to be reused
 
